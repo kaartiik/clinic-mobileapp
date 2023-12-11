@@ -1,38 +1,46 @@
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from "react";
+import AuthContext from "./context/AuthContext";
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { Login, Signup, Welcome } from "./screens";
+import AuthNavigation from './navigation/AuthNavigation'
+import HomeNavigation from './navigation/HomeNavigation'
+import firebase from './firebase';
+import { onAuthStateChanged } from "firebase/auth";
+import Services from "./shared/Services";
 
-const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const {auth} = firebase;
+  const [userData, setUserData] = useState();
+
+  const onAuthStateSave = async (user) => {
+    if (user) {
+      console.log("Sign in process", user);
+      // User is signed in
+      setUserData(user);
+      await Services.setUserAuth(response.user);
+    } else {
+      // User is signed out
+      setUserData(null);
+      await Services.Logout();
+    }
+  }
+
+  useEffect (() => {
+    const subscriber = onAuthStateChanged (auth, onAuthStateSave);
+    return subscriber;
+  })
+
   
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName='Welcome'
-      >
-        <Stack.Screen
-          name="Welcome"
-          component={Welcome}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name="Signup"
-          component={Signup}
-          options={{
-            headerShown: false
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthContext.Provider value={{ userData, setUserData }}>
+      <NavigationContainer>
+        {userData ? (
+          <HomeNavigation />
+        ) : (
+          <AuthNavigation />
+        )}
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 }

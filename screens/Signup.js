@@ -3,12 +3,39 @@ import React, { useState } from 'react'
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from '../constants/colors';
 import { Ionicons } from "@expo/vector-icons";
-import Checkbox from "expo-checkbox"
+// import Checkbox from "expo-checkbox"
 import Button from '../components/Button';
+import firebase from '../firebase';
+import { doc, setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup = ({ navigation }) => {
+   const {db, auth} = firebase;
     const [isPasswordShown, setIsPasswordShown] = useState(false);
-    const [isChecked, setIsChecked] = useState(false);
+   //  const [isChecked, setIsChecked] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+
+
+      const signUpUser = async (email, password) => {
+         try {
+            // Create user with email and password
+            const response = await createUserWithEmailAndPassword(auth, email, password);
+            const uid = response.user.uid;
+
+            // Create a user document in Firestore
+            const userData = {
+               id: uid,
+               email: email,
+            };
+
+            await setDoc(doc(db, "users", uid), userData);
+         } catch (error) {
+            alert(error);
+         }
+      };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <View style={{ flex: 1, marginHorizontal: 22 }}>
@@ -52,47 +79,8 @@ const Signup = ({ navigation }) => {
                             style={{
                                 width: "100%"
                             }}
-                        />
-                    </View>
-                </View>
-
-                <View style={{ marginBottom: 12 }}>
-                    <Text style={{
-                        fontSize: 16,
-                        fontWeight: 400,
-                        marginVertical: 8
-                    }}>Mobile Number</Text>
-
-                    <View style={{
-                        width: "100%",
-                        height: 48,
-                        borderColor: COLORS.black,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingLeft: 22
-                    }}>
-                        <TextInput
-                            placeholder='+91'
-                            placeholderTextColor={COLORS.black}
-                            keyboardType='numeric'
-                            style={{
-                                width: "12%",
-                                borderRightWidth: 1,
-                                borderLeftColor: COLORS.grey,
-                                height: "100%"
-                            }}
-                        />
-
-                        <TextInput
-                            placeholder='Enter your phone number'
-                            placeholderTextColor={COLORS.black}
-                            keyboardType='numeric'
-                            style={{
-                                width: "80%"
-                            }}
+                            onChangeText={setEmail}
+                            value={email}
                         />
                     </View>
                 </View>
@@ -121,6 +109,8 @@ const Signup = ({ navigation }) => {
                             style={{
                                 width: "100%"
                             }}
+                            onChangeText={setPassword}
+                            value={password}
                         />
 
                         <TouchableOpacity
@@ -142,7 +132,7 @@ const Signup = ({ navigation }) => {
                     </View>
                 </View>
 
-                <View style={{
+                {/* <View style={{
                     flexDirection: 'row',
                     marginVertical: 6
                 }}>
@@ -154,7 +144,7 @@ const Signup = ({ navigation }) => {
                     />
 
                     <Text>I aggree to the terms and conditions</Text>
-                </View>
+                </View> */}
 
                 <Button
                     title="Sign Up"
@@ -163,6 +153,7 @@ const Signup = ({ navigation }) => {
                         marginTop: 18,
                         marginBottom: 4,
                     }}
+                    onPress={()=> signUpUser(email, password)}
                 />
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>

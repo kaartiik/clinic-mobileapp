@@ -1,14 +1,37 @@
 import { View, Text, Image , Pressable, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from '../constants/colors';
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox"
 import Button from '../components/Button';
+import firebase from '../firebase';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import AuthContext from '../context/AuthContext';
+import Services from '../shared/Services'
+
 
 const Login = ({ navigation }) => {
-    const [isPasswordShown, setIsPasswordShown] = useState(false);
-    const [isChecked, setIsChecked] = useState(false);
+   const {auth} = firebase;
+   const { userData, setUserData } = useContext(AuthContext);
+   const [isPasswordShown, setIsPasswordShown] = useState(false);
+   const [isChecked, setIsChecked] = useState(false);
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+
+   const loginUser = async (email, password) => {
+      try {
+         // Create user with email and password
+         const response = await signInWithEmailAndPassword(auth, email, password);
+         alert(JSON.stringify(response.user, null, 2));
+         setUserData(response.user);
+         await Services.setUserAuth(response.user);
+
+
+      } catch (error) {
+         alert(error.message);
+      }
+   };
     
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -53,6 +76,8 @@ const Login = ({ navigation }) => {
                             style={{
                                 width: "100%"
                             }}
+                            onChangeText={setEmail}
+                            value={email}
                         />
                     </View>
                 </View>
@@ -81,6 +106,8 @@ const Login = ({ navigation }) => {
                             style={{
                                 width: "100%"
                             }}
+                            onChangeText={setPassword}
+                            value={password}
                         />
 
                         <TouchableOpacity
@@ -123,6 +150,7 @@ const Login = ({ navigation }) => {
                         marginTop: 18,
                         marginBottom: 4,
                     }}
+                    onPress={()=> loginUser(email, password)}
                 />
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
