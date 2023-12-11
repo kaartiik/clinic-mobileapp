@@ -1,17 +1,17 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Home} from "../screens";
+import HomeTab from "./HomeTabNavigation";
 
 const Stack = createStackNavigator();
 
 export default function HomeNavigation() {
    return (
       <Stack.Navigator
-            initialRouteName='Home'
+            initialRouteName='HomeTab'
             >
             <Stack.Screen
-               name="Home"
-               component={Home}
+               name="HomeTab"
+               component={HomeTab}
                options={{
                   headerShown: false
                }}
