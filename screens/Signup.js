@@ -52,7 +52,7 @@ const Signup = ({ navigation }) => {
                     <Text style={{
                         fontSize: 16,
                         color: COLORS.black
-                    }}>Connect with your friend today!</Text>
+                    }}>Connect with your clinic today!</Text>
                 </View>
 
                 <View style={{ marginBottom: 12 }}>
@@ -156,7 +156,7 @@ const Signup = ({ navigation }) => {
                     onPress={()=> signUpUser(email, password)}
                 />
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
                     <View
                         style={{
                             flex: 1,
@@ -233,7 +233,7 @@ const Signup = ({ navigation }) => {
 
                         <Text>Google</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <View style={{
                     flexDirection: "row",

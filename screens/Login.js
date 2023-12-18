@@ -128,7 +128,7 @@ const Login = ({ navigation }) => {
                     </View>
                 </View>
 
-                <View style={{
+                {/* <View style={{
                     flexDirection: 'row',
                     marginVertical: 6
                 }}>
@@ -140,7 +140,7 @@ const Login = ({ navigation }) => {
                     />
 
                     <Text>Remember Me</Text>
-                </View>
+                </View> */}
 
                 <Button
                     title="Login"
@@ -152,7 +152,7 @@ const Login = ({ navigation }) => {
                     onPress={()=> loginUser(email, password)}
                 />
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
                     <View
                         style={{
                             flex: 1,
@@ -229,7 +229,7 @@ const Login = ({ navigation }) => {
 
                         <Text>Google</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <View style={{
                     flexDirection: "row",
