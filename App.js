@@ -15,7 +15,6 @@ export default function App() {
 
   const onAuthStateSave = async (user) => {
     if (user) {
-      console.log("Sign in process", user);
       // User is signed in
       setUserData(user);
       await Services.setUserAuth(response.user);

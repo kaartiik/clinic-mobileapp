@@ -23,7 +23,6 @@ const Login = ({ navigation }) => {
       try {
          // Create user with email and password
          const response = await signInWithEmailAndPassword(auth, email, password);
-         alert(JSON.stringify(response.user, null, 2));
          setUserData(response.user);
          await Services.setUserAuth(response.user);
 
