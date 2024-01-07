@@ -1,7 +1,8 @@
 import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Profile} from "../screens";
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
+import AppointmentsNavigation from "./AppointmentNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -13,6 +14,15 @@ export default function HomeTab() {
          tabBarActiveTintColor: '#e91e63',
       }}
     >
+      <Tab.Screen 
+         name="Appointments" 
+         component={AppointmentsNavigation} 
+         options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => (
+               <MaterialIcons name="history" size={24} color="black" />
+             ),
+         }}/>
       <Tab.Screen 
          name="Home" 
          component={Home} 
