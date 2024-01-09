@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeTab from "./HomeTabNavigation";
+import QRScanner from "../screens/QRScanner";
 
 const Stack = createStackNavigator();
 
@@ -16,14 +17,14 @@ export default function HomeNavigation() {
                   headerShown: false
                }}
             />
-            {/* <Stack.Screen
-               name="Login"
-               component={Login}
+            <Stack.Screen
+               name="QRScanner"
+               component={QRScanner}
                options={{
                   headerShown: false
                }}
             />
-            <Stack.Screen
+            {/*<Stack.Screen
                name="Signup"
                component={Signup}
                options={{

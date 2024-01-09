@@ -39,11 +39,12 @@ const Appointments = ({ navigation }) => {
         const appointmentSnapshot = await getDocs(collection(firebase.db, "users", userData.uid, "appointments"));
   
         appointmentSnapshot.forEach((doc) => {
-          appointmentsArray.push({
-            ...doc.data(), 
-            appointment_time: displayAppointmentTime(doc.data().appointment_date),
-            appointment_date: displayAppointmentDate(doc.data().appointment_date),
-          });
+            appointmentsArray.push({
+                ...doc.data(),
+                appointment_id: doc.id,
+                appointment_time: displayAppointmentTime(doc.data().appointment_date),
+                appointment_date: displayAppointmentDate(doc.data().appointment_date),
+            });
         });
         
         setAppointments(appointmentsArray);
@@ -65,10 +66,18 @@ const Appointments = ({ navigation }) => {
                 <FlatList 
                 data={appointments}
                 renderItem={({item}) => (
-                    <TouchableOpacity style={{flexDirection: 'row', borderWidth: 1, padding: 10, borderRadius: 20}} onPress={() => navigation.navigate("AppointmentDetails", {...item})}>
+                    <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingBottom: 10, borderBottomWidth: 0.5, borderBottomColor: 'black'}}>
                         <Text>{item.appointment_date} </Text>
                         <Text> {item.appointment_time}</Text>
-                    </TouchableOpacity>
+
+                        <TouchableOpacity style={{flexDirection: 'row', borderWidth: 1, padding: 10, borderRadius: 20}} onPress={() => navigation.navigate("AppointmentDetails", {...item})}>
+                            <Text>Details</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{flexDirection: 'row', borderWidth: 1, padding: 10, borderRadius: 20}} onPress={() => navigation.navigate("QRScanner", {appointment_id: item.appointment_id, patient_id: item.patient_id})}>
+                            <Text>Check-In</Text>
+                        </TouchableOpacity>
+                    </View>
                 )}
                 ListEmptyComponent={(
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>

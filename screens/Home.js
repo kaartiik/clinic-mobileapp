@@ -119,7 +119,8 @@ const Home = ({ navigation }) => {
             const appointmentData = {
                 patient_id: userData.uid,
                 clinic_id: selectedClinic.value,
-                appointment_date: date
+                appointment_date: date,
+                checked_in: false
             }
             const clinicDocRef = await addDoc(collection(firebase.db, "clinics", selectedClinic.value, "appointments"), appointmentData);
             await setDoc(doc(firebase.db, "users", userData.uid, "appointments", clinicDocRef.id), appointmentData);

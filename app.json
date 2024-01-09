@@ -31,6 +31,14 @@
       "eas": {
         "projectId": "e8d17f6c-aaf2-4e42-b67b-7cdc09dfc46c"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow Clinic Appointment to access camera."
+        }
+      ]
+    ]
   }
 }
