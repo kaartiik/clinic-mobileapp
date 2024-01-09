@@ -13,12 +13,13 @@ const Signup = ({ navigation }) => {
    const {db, auth} = firebase;
     const [isPasswordShown, setIsPasswordShown] = useState(false);
    //  const [isChecked, setIsChecked] = useState(false);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [dob, setDob] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-
-
-      const signUpUser = async (email, password) => {
+      const signUpUser = async () => {
          try {
             // Create user with email and password
             const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -27,6 +28,9 @@ const Signup = ({ navigation }) => {
             // Create a user document in Firestore
             const userData = {
                id: uid,
+               first_name: firstName,
+               last_name: lastName,
+               dob: dob,
                email: email,
             };
 
@@ -34,6 +38,22 @@ const Signup = ({ navigation }) => {
          } catch (error) {
             alert(error);
          }
+      };
+
+      const handleDateinput = (text) => {
+        // Remove all non-digit characters
+        const cleaned = text.replace(/\D+/g, '');
+    
+        // Apply the formatting
+        let formatted = '';
+        for (let i = 0; i < cleaned.length && i < 8; i++) {
+          if (i === 2 || i === 4) {
+            formatted += '-';
+          }
+          formatted += cleaned[i];
+        }
+    
+        setDob(formatted);
       };
 
     return (
@@ -60,7 +80,95 @@ const Signup = ({ navigation }) => {
                         fontSize: 16,
                         fontWeight: 400,
                         marginVertical: 8
-                    }}>Email address</Text>
+                    }}>First Name</Text>
+
+                    <View style={{
+                        width: "100%",
+                        height: 48,
+                        borderColor: COLORS.black,
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        paddingLeft: 22
+                    }}>
+                        <TextInput
+                            placeholder='Enter your first name'
+                            placeholderTextColor={COLORS.black}
+                            style={{
+                                width: "100%"
+                            }}
+                            onChangeText={setFirstName}
+                            value={firstName}
+                        />
+                    </View>
+                </View>
+
+                <View style={{ marginBottom: 12 }}>
+                    <Text style={{
+                        fontSize: 16,
+                        fontWeight: 400,
+                        marginVertical: 8
+                    }}>Last Name</Text>
+
+                    <View style={{
+                        width: "100%",
+                        height: 48,
+                        borderColor: COLORS.black,
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        paddingLeft: 22
+                    }}>
+                        <TextInput
+                            placeholder='Enter your second name'
+                            placeholderTextColor={COLORS.black}
+                            style={{
+                                width: "100%"
+                            }}
+                            onChangeText={setLastName}
+                            value={lastName}
+                        />
+                    </View>
+                </View>
+
+                <View style={{ marginBottom: 12 }}>
+                    <Text style={{
+                        fontSize: 16,
+                        fontWeight: 400,
+                        marginVertical: 8
+                    }}>Date of Birth</Text>
+
+                    <View style={{
+                        width: "100%",
+                        height: 48,
+                        borderColor: COLORS.black,
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        paddingLeft: 22
+                    }}>
+                        <TextInput
+                            placeholder='dd-mm-yyyy'
+                            placeholderTextColor={COLORS.black}
+                            keyboardType="numeric"
+                            style={{
+                                width: "100%"
+                            }}
+                            onChangeText={handleDateinput}
+                            value={dob}
+                        />
+                    </View>
+                </View>
+
+                <View style={{ marginBottom: 12 }}>
+                    <Text style={{
+                        fontSize: 16,
+                        fontWeight: 400,
+                        marginVertical: 8
+                    }}>Email</Text>
 
                     <View style={{
                         width: "100%",
@@ -153,7 +261,7 @@ const Signup = ({ navigation }) => {
                         marginTop: 18,
                         marginBottom: 4,
                     }}
-                    onPress={()=> signUpUser(email, password)}
+                    onPress={()=> signUpUser()}
                 />
 
                 {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
