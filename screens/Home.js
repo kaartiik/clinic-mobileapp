@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import COLORS from '../constants/colors';
 import Button from '../components/Button';
 import firebase from '../firebase';
-import {collection, getDocs, doc, setDoc, addDoc, Timestamp } from "firebase/firestore";
+import {collection, getDocs, getDoc, doc, setDoc, addDoc, Timestamp } from "firebase/firestore";
 import {Calendar} from 'react-native-calendars';
 import AuthContext from '../context/AuthContext';
 
@@ -60,28 +60,54 @@ const Home = ({ navigation }) => {
         return `${hours}:${minutes} ${modifier}`;
     }
 
-    const createTimeSlots = (start, end) => {
+    const fetchOccupiedtimeSlots = async (day) => {
+        try {
+            const querySnapshot = await getDoc(doc(firebase.db, "clinics", selectedClinic.value, "dates", `${day.year}-${day.month}-${day.day}`));
+
+            if(querySnapshot.exists()) {
+                const querySnapshotObject = querySnapshot.data();
+                const occupiedTimeSlots = Object.values(querySnapshotObject);
+                return occupiedTimeSlots;
+            } else {
+                return [];
+            }
+            
+        } catch (error) {
+            return error;
+        }
+    }
+
+    const createTimeSlots = (start, end, day) => {
         let startTime = convertTo24Hour(start);
         let endTime = convertTo24Hour(end);
         let currentDate = new Date();
         let slots = [];
-    
-        currentDate.setHours(startTime.hours, startTime.minutes, 0);
-    
-        while (currentDate.getHours() < endTime.hours || (currentDate.getHours() === endTime.hours && currentDate.getMinutes() < endTime.minutes)) {
-            const time = format12Hour(currentDate.getHours(), currentDate.getMinutes());
-            slots.push({label: time, value: time});
-            currentDate.setMinutes(currentDate.getMinutes() + 30);
-        }
+
+        fetchOccupiedtimeSlots(day).then(occupiedTimeSlots => {
+            console.log(occupiedTimeSlots);
+            currentDate.setHours(startTime.hours, startTime.minutes, 0);
         
-        setTimeslots(slots);
+            while (currentDate.getHours() < endTime.hours || (currentDate.getHours() === endTime.hours && currentDate.getMinutes() < endTime.minutes)) {
+                const time = format12Hour(currentDate.getHours(), currentDate.getMinutes());
+
+                if(!occupiedTimeSlots.includes(time)) {
+                    slots.push({label: time, value: time});
+                }
+
+                currentDate.setMinutes(currentDate.getMinutes() + 30);
+            }
+            
+            setTimeslots(slots);
+
+        }).catch(error => {
+            alert(error);
+        })
     }
 
     const setClinic = (clinicID) => {
         if(clinicID){
             const clinicData = clinics.find(item => item.value = clinicID);
             setSelectedClinic(clinicData);
-            createTimeSlots(clinicData.openingTime, clinicData.closingTime);
         }
     }
 
@@ -164,6 +190,8 @@ const Home = ({ navigation }) => {
                             // createTimeSlots();
                             setSelectedDate(day.dateString);
                             setSelectedDateObject(day);
+                            createTimeSlots(selectedClinic.openingTime, selectedClinic.closingTime, day);
+
                         }}
                         markedDates={{
                             [selectedDate]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
