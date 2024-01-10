@@ -13,4 +13,13 @@ const Logout = () => {
   AsyncStorage.clear();
 };
 
-export default { setUserAuth, getUserAuth, Logout };
+const setPushToken = async (pushToken) => {
+  await AsyncStorage.setItem("pushToken", pushToken);
+}
+
+const getPushToken = async () => {
+  const value = await AsyncStorage.getItem("pushToken");
+  return value;
+};
+
+export default { setUserAuth, getUserAuth, Logout, setPushToken, getPushToken };

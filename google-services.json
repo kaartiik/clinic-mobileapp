@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "179100938020",
+    "project_id": "clinic-530ab",
+    "storage_bucket": "clinic-530ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179100938020:android:935f91326f9202b8c48db1",
+        "android_client_info": {
+          "package_name": "com.app.clinicmobileapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgsYCww_nrWZGrUvbUH1PTTG6BLYMTnO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

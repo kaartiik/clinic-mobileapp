@@ -24,7 +24,6 @@ Notifications.setNotificationHandler({
 export default function App() {
   const {auth} = firebase;
   const [userData, setUserData] = useState();
-  const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -78,10 +77,14 @@ export default function App() {
     return token.data;
   }
 
+  const savePushToken = async (token) => {
+    await Services.setPushToken(token);
+  }
+
   useEffect (() => {
     const subscriber = onAuthStateChanged (auth, onAuthStateSave);
 
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then(token => savePushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
