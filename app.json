@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.kaartiikvjn.clinicmobileapp"
+      "package": "com.app.clinicmobileapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
