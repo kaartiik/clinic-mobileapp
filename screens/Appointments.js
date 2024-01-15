@@ -36,7 +36,7 @@ const Appointments = ({ navigation }) => {
       const fetchData = async () => {
         let appointmentsArray = [];
 
-        const appointmentSnapshot = await getDocs(collection(firebase.db, "users", userData.uid, "appointments"));
+        const appointmentSnapshot = await getDocs(collection(firebase.db, "users", userData.id, "appointments"));
   
         appointmentSnapshot.forEach((doc) => {
             appointmentsArray.push({

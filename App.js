@@ -31,8 +31,12 @@ export default function App() {
   const onAuthStateSave = async (user) => {
     if (user) {
       // User is signed in
-      setUserData(user);
-      await Services.setUserAuth(response.user);
+      const userRef = doc(firebase.db, "users", user.uid);
+
+      const userSnapshot = await getDoc(userRef);
+
+      setUserData(userSnapshot.data());
+      await Services.setUserAuth(userSnapshot.data());
     } else {
       // User is signed out
       setUserData(null);

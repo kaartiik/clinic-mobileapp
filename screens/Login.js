@@ -7,7 +7,7 @@ import Checkbox from "expo-checkbox"
 import Button from '../components/Button';
 import firebase from '../firebase';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, getDoc } from "firebase/firestore";
 import AuthContext from '../context/AuthContext';
 import Services from '../shared/Services'
 
@@ -24,8 +24,6 @@ const Login = ({ navigation }) => {
       try {
          // Create user with email and password
          const response = await signInWithEmailAndPassword(auth, email, password);
-         setUserData(response.user);
-         await Services.setUserAuth(response.user);
          const pushToken = await Services.getPushToken();
 
          const userRef = doc(firebase.db, "users", response.user.uid);
@@ -33,6 +31,11 @@ const Login = ({ navigation }) => {
          await updateDoc(userRef, {
             push_token: pushToken
           });
+
+         const userSnapshot = await getDoc(userRef);
+
+         setUserData(userSnapshot.data());
+         await Services.setUserAuth(userSnapshot.data());
 
       } catch (error) {
          alert(error.message);

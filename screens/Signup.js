@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import firebase from '../firebase';
 import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import Services from '../shared/Services';
 
 const Signup = ({ navigation }) => {
    const {db, auth} = firebase;
@@ -24,6 +25,7 @@ const Signup = ({ navigation }) => {
             // Create user with email and password
             const response = await createUserWithEmailAndPassword(auth, email, password);
             const uid = response.user.uid;
+            const pushToken = await Services.getPushToken();
 
             // Create a user document in Firestore
             const userData = {
@@ -32,6 +34,7 @@ const Signup = ({ navigation }) => {
                last_name: lastName,
                dob: dob,
                email: email,
+               push_token: pushToken
             };
 
             await setDoc(doc(db, "users", uid), userData);

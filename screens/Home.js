@@ -143,13 +143,13 @@ const Home = ({ navigation }) => {
             date.setHours(hours, minutes, 0, 0);
 
             const appointmentData = {
-                patient_id: userData.uid,
+                patient_id: userData.id,
                 clinic_id: selectedClinic.value,
                 appointment_date: date,
                 checked_in: false
             }
             const clinicDocRef = await addDoc(collection(firebase.db, "clinics", selectedClinic.value, "appointments"), appointmentData);
-            await setDoc(doc(firebase.db, "users", userData.uid, "appointments", clinicDocRef.id), appointmentData);
+            await setDoc(doc(firebase.db, "users", userData.id, "appointments", clinicDocRef.id), appointmentData);
 
             alert('Appointment booked!')
 
