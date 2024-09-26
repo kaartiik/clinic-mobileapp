@@ -1,15 +1,17 @@
 import { View, Text, Pressable, Image, StyleSheet } from 'react-native'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import COLORS from '../constants/colors';
 import Button from '../components/Button';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { signOut } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, addDoc, collection } from "firebase/firestore";
 import firebase from '../firebase';
+import AuthContext from '../context/AuthContext';
 
 
 const QRScanner = ({ route, navigation }) => {
-    const {appointment_id, patient_id} = route.params;
+    const { userData } = useContext(AuthContext);
+    const {hasAppointment, appointment_id} = route.params;
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
@@ -30,9 +32,8 @@ const QRScanner = ({ route, navigation }) => {
         }
     
         try {
-          console.log(data, appointment_id);
           const clinicAppointmentRef = doc(firebase.db, 'clinics', data, 'appointments', appointment_id);
-          const patientAppointmentRef = doc(firebase.db, 'users', patient_id, 'appointments', appointment_id);
+          const patientAppointmentRef = doc(firebase.db, 'users', userData.id, 'appointments', appointment_id);
     
           const updateAppointmentMedicalInfoClinic = await updateDoc(clinicAppointmentRef, firestoreData);
           const updateAppointmentMedicalInfoPatient = await updateDoc(patientAppointmentRef, firestoreData);
@@ -53,6 +54,34 @@ const QRScanner = ({ route, navigation }) => {
         return <Text>No access to camera</Text>;
       }
 
+      const bookAppointment = async ({ type, data }) => {
+        console.log("TEESSSSSSSTTT", data);
+        setScanned(true);
+        try {
+            const appointmentData = {
+                patient_id: userData.id,
+                patient_name: `${userData.first_name} ${userData.last_name}`,
+                clinic_id: data,
+                appointment_booked: false,
+                appointment_date: "N/A",
+                checked_in: false,
+                checked_in: true,
+                check_in_time: new Date()
+            }
+
+            const clinicDocRef = await addDoc(collection(firebase.db, "clinics", data, "appointments"), appointmentData);
+            await setDoc(doc(firebase.db, "users", userData.id, "appointments", clinicDocRef.id), appointmentData);
+
+            alert('Checked in!')
+
+        } catch (error) {
+            alert(error);
+         }
+         finally{
+          navigation.goBack();
+        }
+    }
+
     return (
         <View
             style={{
@@ -60,7 +89,7 @@ const QRScanner = ({ route, navigation }) => {
             }}
         >
             <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                onBarCodeScanned={scanned ? undefined : hasAppointment ? handleBarCodeScanned : bookAppointment}
                 style={StyleSheet.absoluteFillObject}
             />
         </View>

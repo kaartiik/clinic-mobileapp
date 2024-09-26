@@ -144,7 +144,9 @@ const Home = ({ navigation }) => {
 
             const appointmentData = {
                 patient_id: userData.id,
+                patient_name: `${userData.first_name} ${userData.last_name}`,
                 clinic_id: selectedClinic.value,
+                appointment_booked: true,
                 appointment_date: date,
                 checked_in: false
             }
